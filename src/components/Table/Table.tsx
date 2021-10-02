@@ -24,9 +24,9 @@ class Table extends Component<props, dataObj> {
   }
 
   componentDidMount(): void {
-    this.props.axiosGet()
+    this.props.axiosGet() //вызываем экшн для обработки сагой
   }
-  
+
   render() {
     return (
       <div className='table'>

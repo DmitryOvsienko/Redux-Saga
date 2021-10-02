@@ -20,6 +20,8 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        display: flex;
+        justify-content: center;
         img {
           display: block;
           height: 50px;
