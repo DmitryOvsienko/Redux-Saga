@@ -3,11 +3,25 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+// import {Provider} from 'react-redux' //библиотека для связки реакта с редаксом
+// import {compose, createStore, applyMiddleware} from 'redux'
+// import createSagaMiddleware from 'redux-saga'
+
+// const saga = createSagaMiddleware()
+
+// const store = createStore(rootReducer, compose(
+//   applyMiddleware(
+//      saga // добавляем сагу в миддлвеер
+//   ),
+//   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+// )) // создаем стор редакса это хранилище
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  // <Provider store={store}>
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+  // </Provider>,
   document.getElementById('root')
 );
 

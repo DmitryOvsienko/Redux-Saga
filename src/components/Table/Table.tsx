@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import axios from "axios";
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import { createStore } from "redux";
 
 import reducer from '../reducer'
@@ -51,7 +50,7 @@ class Table extends Component<props, dataObj> {
     }
     return (
       <div className='table'>
-        <div className='row'>
+        <div className='row main'>
           <div className='col'>
             name
           </div>
@@ -86,27 +85,6 @@ class Table extends Component<props, dataObj> {
             volume
           </div>
           <div className='col'>
-            method
-          </div>
-          <div className='col'>
-            fermentation
-          </div>
-          <div className='col'>
-            ingredients
-          </div>
-          <div className='col'>
-            amount
-          </div>
-          <div className='col'>
-            hops
-          </div>
-          <div className='col'>
-            yeast
-          </div>
-          <div className='col'>
-            food_pairing
-          </div>
-          <div className='col'>
             brewers_tips
           </div>
           <div className='col'>
@@ -115,67 +93,46 @@ class Table extends Component<props, dataObj> {
         </div>
         {/*cicle*/}
         {
-          this.state.data.map(item => (
-            <div className='row'>
+          this.state.data.map((item: any) => (
+            <div className='row' key={item.id}>
               <div className='col'>
-
+                {item.name}
               </div>
               <div className='col'>
-
+                {item.tagline}
               </div>
               <div className='col'>
-
+                {item.first_brewed}
               </div>
               <div className='col'>
-
+                {item.description}
               </div>
               <div className='col'>
-
+                <img src={item.image_url} alt='pic'/>
               </div>
               <div className='col'>
-
+                {item.abv}
               </div>
               <div className='col'>
-
+                {item.ibu}  
               </div>
               <div className='col'>
-
+                {item.ebc}
               </div>
               <div className='col'>
-
+                {item.srm}
               </div>
               <div className='col'>
-
+                {item.attenuation_level}
               </div>
               <div className='col'>
-
+                {item.volume.value}
               </div>
               <div className='col'>
-
+                {item.brewers_tips}
               </div>
               <div className='col'>
-
-              </div>
-              <div className='col'>
-
-              </div>
-              <div className='col'>
-
-              </div>
-              <div className='col'>
-
-              </div>
-              <div className='col'>
-
-              </div>
-              <div className='col'>
-
-              </div>
-              <div className='col'>
-
-              </div>
-              <div className='col'>
-
+                {item.contributed_by}
               </div>
             </div>
           ))
