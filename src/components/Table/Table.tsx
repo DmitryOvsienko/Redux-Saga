@@ -1,23 +1,19 @@
-import React, {Component} from "react";
-import axios from "axios";
-import { createStore } from "redux";
-
-import reducer from '../reducer'
+import {Component} from "react";
 
 import './Table.scss'
-
-const initialState = {
-  data: []
-}
-
-const store = createStore(reducer, initialState)
-console.log('===>store.getState', store.getState())
+import { connect } from "react-redux";
+import { axiosGet } from "../../redux/actions";
 
 type dataObj = {
-  data: [],
+  data: any[],
 }
 
-type props = {}
+type props = {
+  axiosGet: typeof axiosGet,
+  data: {
+    data: any[]
+  }
+}
 
 class Table extends Component<props, dataObj> {
   constructor(props: props) {
@@ -27,27 +23,11 @@ class Table extends Component<props, dataObj> {
     }
   }
 
-  getData() {
-    axios.get('https://api.punkapi.com/v2/beers')
-      .then((res) => {
-        this.setState({
-          data: res.data
-        })
-        initialState.data = res.data
-      })
-      .catch((error) => {
-        console.log('===>error', error);
-      })
-  }
-
   componentDidMount(): void {
-    this.getData()
+    this.props.axiosGet()
   }
-
+  
   render() {
-    if (this.state !== null) {
-      console.log('===>this.state.data', this.state.data);
-    }
     return (
       <div className='table'>
         <div className='row main'>
@@ -91,9 +71,10 @@ class Table extends Component<props, dataObj> {
             contributed_by
           </div>
         </div>
-        {/*cicle*/}
         {
-          this.state.data.map((item: any) => (
+          this.props.data.data.length 
+          ?
+          this.props.data.data.map((item: any) => (
             <div className='row' key={item.id}>
               <div className='col'>
                 {item.name}
@@ -136,11 +117,20 @@ class Table extends Component<props, dataObj> {
               </div>
             </div>
           ))
+          :
+            <div className="loading">LOADING...</div>
         }
-        {/*cicle*/}
       </div>
     );
   }
 }
 
-export default Table
+const mapDispatchToProps = { // наш экшн передаем его в диспатч
+  axiosGet
+}
+
+const mapStateToProps = (state:any) => ({ //стейт редакса
+  data: state.data,
+});
+
+export default connect(mapStateToProps,mapDispatchToProps)(Table) //первым параметром принимает стейт вторым экшн
