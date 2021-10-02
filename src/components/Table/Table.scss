@@ -1,0 +1,37 @@
+.Main {
+  .table {
+    .row.main {
+      height: 68px;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      justify-content: space-between;
+      font-family: "Inter", sans-serif;
+      font-style: normal;
+      line-height: 12px;
+      font-weight: bold;
+      border-bottom: 1px solid #eceff2;
+      height: 100px;
+      padding: 0 20px;
+      .col {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        img {
+          display: block;
+          height: 50px;
+          width: auto;
+        }
+      }
+    }
+    .loading {
+      display: flex;
+      justify-content: center;
+      margin-top: 100px;
+      font-size: 50px;
+    }
+  }
+}
