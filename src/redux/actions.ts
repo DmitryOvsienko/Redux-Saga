@@ -1,7 +1,7 @@
-import { REQUEST_POSTS } from "./types";
+import { GetDataTypes } from "./types";
 
 export const axiosGet = () => {
   return {
-    type: REQUEST_POSTS
+    type: GetDataTypes.REQUEST_POSTS
   }
 }
