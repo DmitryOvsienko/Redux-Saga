@@ -1,4 +1,4 @@
-import {Component} from "react";
+import React, {Component} from "react";
 
 import './Table.scss'
 import {connect} from "react-redux";
@@ -22,7 +22,7 @@ export interface axiosData {
 }
 
 type dataObj = {
-  data: [axiosData],
+  data: axiosData[],
   hover: boolean,
   id: number,
   changeText: boolean
@@ -32,7 +32,7 @@ type props = { //обозначаем типы пропсов
   axiosGet: typeof axiosGet,
   deleteData: typeof deleteData,
   data: {
-    data: [axiosData]
+    data: axiosData[]
   }
 }
 
@@ -100,21 +100,32 @@ class Table extends Component<props, dataObj> {
     })
   }
 
-  handlerInput(event: any) {
+  handlerInput(event: any, id: any) {
     const {value} = event.target
-
+    const newColumn = this.state.data.map((el: any) => {
+      if (el.id === id) {
+        return {
+          ...el,
+          name: value,
+        }
+      }
+      return el
+    })
+    console.log('===>newColumn', newColumn);
+    this.setState({data: newColumn})
   }
 
-  componentDidMount(): void {
+  componentDidMount (): void {
     this.props.axiosGet() //вызываем экшн для обработки сагой чтобы тайпскрипт не ругался нужно определить его тип
-
   }
 
   componentDidUpdate() {
     if (this.props.data.data !== this.state.data) {
-      this.setState({
-        data: this.props.data.data
-      })
+      if (this.state.data.length === 1) {
+        this.setState({
+          data: this.props.data.data
+        })
+      }
     }
   }
 
@@ -191,8 +202,8 @@ class Table extends Component<props, dataObj> {
                         <input
                           style={{textAlign: "center"}}
                           type="text"
-                          // value={item.name}
-                          onChange={this.handlerInput}
+                          value={item.name}
+                          onChange={(e) => this.handlerInput(e, item.id)}
                         />
                       </div>
                       :
