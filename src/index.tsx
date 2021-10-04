@@ -6,8 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import {Provider} from 'react-redux' //библиотека для связки реакта с редаксом
 import {compose, createStore, applyMiddleware} from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { rootReducer } from './redux/rootReducer';
-import { sagaWatcher } from './redux/sagas';
+import {rootReducer} from './redux/rootReducer';
+import {sagaWatcher} from './redux/sagas';
 
 declare global {
   interface Window {
@@ -17,11 +17,11 @@ declare global {
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const saga = createSagaMiddleware()
+const saga = createSagaMiddleware() //создаем сагу
 
 const store = createStore(rootReducer, compose(
   applyMiddleware(
-     saga // добавляем сагу в миддлвеер
+    saga // добавляем сагу в миддлвеер
   ),
   composeEnhancers()
 )) // создаем стор редакса это хранилище
@@ -31,9 +31,9 @@ saga.run(sagaWatcher) //привязываем наш вотчер
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-      <App />
+      <App/>
     </React.StrictMode>
-   </Provider>,
+  </Provider>,
   document.getElementById('root')
 );
 
