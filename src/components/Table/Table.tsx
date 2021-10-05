@@ -75,6 +75,11 @@ class Table extends Component<props, dataObj> {
     this.deleteItem = this.deleteItem.bind(this)
     this.changeItem = this.changeItem.bind(this)
     this.handlerInput = this.handlerInput.bind(this)
+    this.scrollTopMenuFix = this.scrollTopMenuFix.bind(this)
+  }
+
+  scrollTopMenuFix = () => {
+    console.log('===>111',111 );
   }
 
   cutText = (text: string): string => {
@@ -113,7 +118,7 @@ class Table extends Component<props, dataObj> {
     })
   }
 
-  handlerInput(event: {target: HTMLInputElement;}, id: number) {
+  handlerInput(event: { target: HTMLInputElement; }, id: number) {
     const {value, name} = event.target
     const newColumn = this.state.data.map((el: axiosData) => {
       if (el.id === id) {
@@ -152,7 +157,9 @@ class Table extends Component<props, dataObj> {
   render() {
     return (
       <div className='table'>
-        <div className='row main'>
+        <div
+          className='row main'
+        >
           <div className='col'>
             name
           </div>
