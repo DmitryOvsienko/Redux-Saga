@@ -16,7 +16,9 @@ export interface axiosData {
   ebc: number,
   srm: number,
   attenuation_level: number,
-  volume: number,
+  volume: {
+    value: number
+  },
   brewers_tips: string,
   contributed_by: string
 }
@@ -55,7 +57,9 @@ class Table extends Component<props, dataObj> {
         ebc: 0,
         srm: 0,
         attenuation_level: 0,
-        volume: 0,
+        volume: {
+          value: 0
+        },
         brewers_tips: '',
         contributed_by: ''
       }],
@@ -78,14 +82,14 @@ class Table extends Component<props, dataObj> {
     return `${cut}...`
   }
 
-  showButton(id: number): void {
+  showButton(id: number) {
     this.setState({
       hover: true,
       id
     })
   }
 
-  hideButton(id: number): void {
+  hideButton(id: number) {
     this.setState({
       hover: false,
       id,
@@ -109,9 +113,9 @@ class Table extends Component<props, dataObj> {
     })
   }
 
-  handlerInput(event: any, id: any) {
+  handlerInput(event: {target: HTMLInputElement;}, id: number) {
     const {value, name} = event.target
-    const newColumn = this.state.data.map((el: any) => {
+    const newColumn = this.state.data.map((el: axiosData) => {
       if (el.id === id) {
         return {
           ...el,
@@ -124,7 +128,7 @@ class Table extends Component<props, dataObj> {
   }
 
 
-  componentDidMount(): void {
+  componentDidMount() {
     this.props.axiosGet() //вызываем экшн для обработки сагой чтобы тайпскрипт не ругался нужно определить его тип
   }
 
@@ -192,235 +196,236 @@ class Table extends Component<props, dataObj> {
         {
           this.state.data.length > 1
             ?
-            this.state.data.map((item: any) => {
-              return(
-              <div className='row'
-                   key={item.id}
-                   onMouseEnter={() => this.showButton(item.id)}
-                   onMouseLeave={() => this.hideButton(item.id)}
-              >
-                <button
-                  className={this.state.hover && item.id === this.state.id ? 'deleteItem show' : 'deleteItem'}
-                  onClick={() => this.deleteItem(item.id)}
+            this.state.data.map((item: axiosData) => {
+              return (
+                <div className='row'
+                     key={item.id}
+                     onMouseEnter={() => this.showButton(item.id)}
+                     onMouseLeave={() => this.hideButton(item.id)}
                 >
-                  Delete
-                </button>
-                <button
-                  className={this.state.hover && item.id === this.state.id ? 'changeItem show' : 'changeItem'}
-                  onClick={() => this.changeItem(item.id)}
-                >
-                  Change
-                </button>
-                <div className='col'>
-                  {
-                    this.state.id === item.id && this.state.changeText
-                      ?
-                      <div>
-                        <input
-                          name='name'
-                          style={{textAlign: "center"}}
-                          type="text"
-                          value={item.name}
-                          onChange={(e) => this.handlerInput(e, item.id)}
-                        />
-                      </div>
-                      :
-                      item.name
-                  }
+                  <button
+                    className={this.state.hover && item.id === this.state.id ? 'deleteItem show' : 'deleteItem'}
+                    onClick={() => this.deleteItem(item.id)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className={this.state.hover && item.id === this.state.id ? 'changeItem show' : 'changeItem'}
+                    onClick={() => this.changeItem(item.id)}
+                  >
+                    Change
+                  </button>
+                  <div className='col'>
+                    {
+                      this.state.id === item.id && this.state.changeText
+                        ?
+                        <div>
+                          <input
+                            name='name'
+                            style={{textAlign: "center"}}
+                            type="text"
+                            value={item.name}
+                            onChange={(e) => this.handlerInput(e, item.id)}
+                          />
+                        </div>
+                        :
+                        item.name
+                    }
 
+                  </div>
+                  <div className='col'>
+                    {
+                      this.state.id === item.id && this.state.changeText
+                        ?
+                        <div>
+                          <input
+                            name='tagline'
+                            style={{textAlign: "center"}}
+                            type="text"
+                            value={item.tagline}
+                            onChange={(e) => this.handlerInput(e, item.id)}
+                          />
+                        </div>
+                        :
+                        item.tagline
+                    }
+                  </div>
+                  <div className='col'>
+                    {
+                      this.state.id === item.id && this.state.changeText
+                        ?
+                        <div>
+                          <input
+                            name='first_brewed'
+                            style={{textAlign: "center"}}
+                            type="text"
+                            value={item.first_brewed}
+                            onChange={(e) => this.handlerInput(e, item.id)}
+                          />
+                        </div>
+                        :
+                        item.first_brewed
+                    }
+                  </div>
+                  <div className='col'>
+                    {
+                      this.state.id === item.id && this.state.changeText
+                        ?
+                        <div>
+                          <input
+                            name='description'
+                            style={{textAlign: "center"}}
+                            type="text"
+                            value={item.description}
+                            onChange={(e) => this.handlerInput(e, item.id)}
+                          />
+                        </div>
+                        :
+                        this.cutText(item.description)
+                    }
+                  </div>
+                  <div className='col'>
+                    <img src={item.image_url} alt='pic'/>
+                  </div>
+                  <div className='col'>
+                    {
+                      this.state.id === item.id && this.state.changeText
+                        ?
+                        <div>
+                          <input
+                            name='abv'
+                            style={{textAlign: "center"}}
+                            type="text"
+                            value={item.abv}
+                            onChange={(e) => this.handlerInput(e, item.id)}
+                          />
+                        </div>
+                        :
+                        item.abv
+                    }
+                  </div>
+                  <div className='col'>
+                    {
+                      this.state.id === item.id && this.state.changeText
+                        ?
+                        <div>
+                          <input
+                            name='ibu'
+                            style={{textAlign: "center"}}
+                            type="text"
+                            value={item.ibu}
+                            onChange={(e) => this.handlerInput(e, item.id)}
+                          />
+                        </div>
+                        :
+                        item.ibu
+                    }
+                  </div>
+                  <div className='col'>
+                    {
+                      this.state.id === item.id && this.state.changeText
+                        ?
+                        <div>
+                          <input
+                            name='ebc'
+                            style={{textAlign: "center"}}
+                            type="text"
+                            value={item.ebc}
+                            onChange={(e) => this.handlerInput(e, item.id)}
+                          />
+                        </div>
+                        :
+                        item.ebc
+                    }
+                  </div>
+                  <div className='col'>
+                    {
+                      this.state.id === item.id && this.state.changeText
+                        ?
+                        <div>
+                          <input
+                            name='srm'
+                            style={{textAlign: "center"}}
+                            type="text"
+                            value={item.srm}
+                            onChange={(e) => this.handlerInput(e, item.id)}
+                          />
+                        </div>
+                        :
+                        item.srm
+                    }
+                  </div>
+                  <div className='col'>
+                    {
+                      this.state.id === item.id && this.state.changeText
+                        ?
+                        <div>
+                          <input
+                            name='attenuation_level'
+                            style={{textAlign: "center"}}
+                            type="text"
+                            value={item.attenuation_level}
+                            onChange={(e) => this.handlerInput(e, item.id)}
+                          />
+                        </div>
+                        :
+                        item.attenuation_level
+                    }
+                  </div>
+                  <div className='col'>
+                    {
+                      this.state.id === item.id && this.state.changeText
+                        ?
+                        <div>
+                          <input
+                            name='volume'
+                            style={{textAlign: "center"}}
+                            type="text"
+                            value={item.volume.value}
+                            onChange={(e) => this.handlerInput(e, item.id)}
+                          />
+                        </div>
+                        :
+                        item.volume.value
+                    }
+                  </div>
+                  <div className='col'>
+                    {
+                      this.state.id === item.id && this.state.changeText
+                        ?
+                        <div>
+                          <input
+                            name='brewers_tips'
+                            style={{textAlign: "center"}}
+                            type="text"
+                            value={item.brewers_tips}
+                            onChange={(e) => this.handlerInput(e, item.id)}
+                          />
+                        </div>
+                        :
+                        this.cutText(item.brewers_tips)
+                    }
+                  </div>
+                  <div className='col'>
+                    {
+                      this.state.id === item.id && this.state.changeText
+                        ?
+                        <div>
+                          <input
+                            name='contributed_by'
+                            style={{textAlign: "center"}}
+                            type="text"
+                            value={item.contributed_by}
+                            onChange={(e) => this.handlerInput(e, item.id)}
+                          />
+                        </div>
+                        :
+                        this.cutText(item.contributed_by)
+                    }
+                  </div>
                 </div>
-                <div className='col'>
-                  {
-                    this.state.id === item.id && this.state.changeText
-                      ?
-                      <div>
-                        <input
-                          name='tagline'
-                          style={{textAlign: "center"}}
-                          type="text"
-                          value={item.tagline}
-                          onChange={(e) => this.handlerInput(e, item.id)}
-                        />
-                      </div>
-                      :
-                      item.tagline
-                  }
-                </div>
-                <div className='col'>
-                  {
-                    this.state.id === item.id && this.state.changeText
-                      ?
-                      <div>
-                        <input
-                          name='first_brewed'
-                          style={{textAlign: "center"}}
-                          type="text"
-                          value={item.first_brewed}
-                          onChange={(e) => this.handlerInput(e, item.id)}
-                        />
-                      </div>
-                      :
-                      item.first_brewed
-                  }
-                </div>
-                <div className='col'>
-                  {
-                    this.state.id === item.id && this.state.changeText
-                      ?
-                      <div>
-                        <input
-                          name='description'
-                          style={{textAlign: "center"}}
-                          type="text"
-                          value={item.description}
-                          onChange={(e) => this.handlerInput(e, item.id)}
-                        />
-                      </div>
-                      :
-                      this.cutText(item.description)
-                  }
-                </div>
-                <div className='col'>
-                  <img src={item.image_url} alt='pic'/>
-                </div>
-                <div className='col'>
-                  {
-                    this.state.id === item.id && this.state.changeText
-                      ?
-                      <div>
-                        <input
-                          name='abv'
-                          style={{textAlign: "center"}}
-                          type="text"
-                          value={item.abv}
-                          onChange={(e) => this.handlerInput(e, item.id)}
-                        />
-                      </div>
-                      :
-                      item.abv
-                  }
-                </div>
-                <div className='col'>
-                  {
-                    this.state.id === item.id && this.state.changeText
-                      ?
-                      <div>
-                        <input
-                          name='ibu'
-                          style={{textAlign: "center"}}
-                          type="text"
-                          value={item.ibu}
-                          onChange={(e) => this.handlerInput(e, item.id)}
-                        />
-                      </div>
-                      :
-                      item.ibu
-                  }
-                </div>
-                <div className='col'>
-                  {
-                    this.state.id === item.id && this.state.changeText
-                      ?
-                      <div>
-                        <input
-                          name='ebc'
-                          style={{textAlign: "center"}}
-                          type="text"
-                          value={item.ebc}
-                          onChange={(e) => this.handlerInput(e, item.id)}
-                        />
-                      </div>
-                      :
-                      item.ebc
-                  }
-                </div>
-                <div className='col'>
-                  {
-                    this.state.id === item.id && this.state.changeText
-                      ?
-                      <div>
-                        <input
-                          name='srm'
-                          style={{textAlign: "center"}}
-                          type="text"
-                          value={item.srm}
-                          onChange={(e) => this.handlerInput(e, item.id)}
-                        />
-                      </div>
-                      :
-                      item.srm
-                  }
-                </div>
-                <div className='col'>
-                  {
-                    this.state.id === item.id && this.state.changeText
-                      ?
-                      <div>
-                        <input
-                          name='attenuation_level'
-                          style={{textAlign: "center"}}
-                          type="text"
-                          value={item.attenuation_level}
-                          onChange={(e) => this.handlerInput(e, item.id)}
-                        />
-                      </div>
-                      :
-                      item.attenuation_level
-                  }
-                </div>
-                <div className='col'>
-                  {
-                    this.state.id === item.id && this.state.changeText
-                      ?
-                      <div>
-                        <input
-                          name='volume'
-                          style={{textAlign: "center"}}
-                          type="text"
-                          value={item.volume.value}
-                          onChange={(e) => this.handlerInput(e, item.id)}
-                        />
-                      </div>
-                      :
-                      item.volume.value
-                  }
-                </div>
-                <div className='col'>
-                  {
-                    this.state.id === item.id && this.state.changeText
-                      ?
-                      <div>
-                        <input
-                          name='brewers_tips'
-                          style={{textAlign: "center"}}
-                          type="text"
-                          value={item.brewers_tips}
-                          onChange={(e) => this.handlerInput(e, item.id)}
-                        />
-                      </div>
-                      :
-                      this.cutText(item.brewers_tips)
-                  }
-                </div>
-                <div className='col'>
-                  {
-                    this.state.id === item.id && this.state.changeText
-                      ?
-                      <div>
-                        <input
-                          name='contributed_by'
-                          style={{textAlign: "center"}}
-                          type="text"
-                          value={item.contributed_by}
-                          onChange={(e) => this.handlerInput(e, item.id)}
-                        />
-                      </div>
-                      :
-                      this.cutText(item.contributed_by)
-                  }
-                </div>
-              </div>
-            )})
+              )
+            })
             :
             <div className="loading">LOADING...</div>
         }
