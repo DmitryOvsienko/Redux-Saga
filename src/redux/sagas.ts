@@ -5,6 +5,7 @@ import { GetDataTypes } from './types'
 export function* sagaWatcher () {
   yield takeEvery(GetDataTypes.REQUEST_DATA, sagaWorker) //на каждый сайд эффект будем выполнять воркер
   yield takeEvery(GetDataTypes.DELETE_DATA, deleteDataWorker)
+  yield takeEvery(GetDataTypes.CHANGE_ITEM, changeItemWorker)
 }
 
 function* sagaWorker (): any {
@@ -18,6 +19,10 @@ function* sagaWorker (): any {
 
 function* deleteDataWorker (action: any) {
   yield put({type: GetDataTypes.DELETE_DATA_ADD, action})
+}
+
+function* changeItemWorker (action: any) {
+  yield put({type: GetDataTypes.CHANGE_ITEM_ADD, action})
 }
 
 async function axiosGetData() {

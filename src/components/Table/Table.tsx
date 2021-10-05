@@ -2,7 +2,7 @@ import React, {Component} from "react";
 
 import './Table.scss'
 import {connect} from "react-redux";
-import {axiosGet, deleteData} from "../../redux/actions";
+import {axiosGet, changeItemAdd, deleteData} from "../../redux/actions";
 
 export interface axiosData {
   id: number,
@@ -25,12 +25,15 @@ type dataObj = {
   data: axiosData[],
   hover: boolean,
   id: number,
-  changeText: boolean
+  changeText: boolean,
+  flag: boolean,
+  deleteFlag: boolean
 }
 
 type props = { //обозначаем типы пропсов
   axiosGet: typeof axiosGet,
   deleteData: typeof deleteData,
+  changeItemAdd: typeof changeItemAdd,
   data: {
     data: axiosData[]
   }
@@ -59,6 +62,8 @@ class Table extends Component<props, dataObj> {
       hover: false,
       id: 0,
       changeText: false,
+      flag: false,
+      deleteFlag: false
     }
 
     this.hideButton = this.hideButton.bind(this)
@@ -86,11 +91,15 @@ class Table extends Component<props, dataObj> {
       id,
       changeText: false
     })
+    this.props.changeItemAdd(this.state.data)
   }
 
   deleteItem(id: number) {
-    const newData = this.props.data.data.filter(item => item.id !== id)
+    const newData = this.state.data.filter(item => item.id !== id)
     this.props.deleteData(newData)
+    this.setState({
+      deleteFlag: true
+    })
   }
 
   changeItem(id: number) {
@@ -101,32 +110,39 @@ class Table extends Component<props, dataObj> {
   }
 
   handlerInput(event: any, id: any) {
-    const {value} = event.target
+    const {value, name} = event.target
     const newColumn = this.state.data.map((el: any) => {
       if (el.id === id) {
         return {
           ...el,
-          name: value,
+          [name]: value,
         }
       }
       return el
     })
-    console.log('===>newColumn', newColumn);
     this.setState({data: newColumn})
   }
 
-  componentDidMount (): void {
+
+  componentDidMount(): void {
     this.props.axiosGet() //вызываем экшн для обработки сагой чтобы тайпскрипт не ругался нужно определить его тип
   }
 
   componentDidUpdate() {
-    if (this.props.data.data !== this.state.data) {
-      if (this.state.data.length === 1) {
-        this.setState({
-          data: this.props.data.data
-        })
-      }
+    if (this.props.data.data.length && !this.state.flag) { /*при первом рендере*/
+      this.setState({
+        data: this.props.data.data,
+        flag: true
+      })
     }
+
+    if (this.state.deleteFlag) { /*перерендер при удалении*/
+      this.setState({
+        data: this.props.data.data,
+        deleteFlag: false
+      })
+    }
+
   }
 
   render() {
@@ -176,7 +192,8 @@ class Table extends Component<props, dataObj> {
         {
           this.state.data.length > 1
             ?
-            this.state.data.map((item: any) => (
+            this.state.data.map((item: any) => {
+              return(
               <div className='row'
                    key={item.id}
                    onMouseEnter={() => this.showButton(item.id)}
@@ -200,6 +217,7 @@ class Table extends Component<props, dataObj> {
                       ?
                       <div>
                         <input
+                          name='name'
                           style={{textAlign: "center"}}
                           type="text"
                           value={item.name}
@@ -213,50 +231,196 @@ class Table extends Component<props, dataObj> {
                 </div>
                 <div className='col'>
                   {
-                    this.cutText(item.tagline)
+                    this.state.id === item.id && this.state.changeText
+                      ?
+                      <div>
+                        <input
+                          name='tagline'
+                          style={{textAlign: "center"}}
+                          type="text"
+                          value={item.tagline}
+                          onChange={(e) => this.handlerInput(e, item.id)}
+                        />
+                      </div>
+                      :
+                      item.tagline
                   }
                 </div>
                 <div className='col'>
-                  {item.first_brewed}
+                  {
+                    this.state.id === item.id && this.state.changeText
+                      ?
+                      <div>
+                        <input
+                          name='first_brewed'
+                          style={{textAlign: "center"}}
+                          type="text"
+                          value={item.first_brewed}
+                          onChange={(e) => this.handlerInput(e, item.id)}
+                        />
+                      </div>
+                      :
+                      item.first_brewed
+                  }
                 </div>
                 <div className='col'>
                   {
-                    this.cutText(item.description)
+                    this.state.id === item.id && this.state.changeText
+                      ?
+                      <div>
+                        <input
+                          name='description'
+                          style={{textAlign: "center"}}
+                          type="text"
+                          value={item.description}
+                          onChange={(e) => this.handlerInput(e, item.id)}
+                        />
+                      </div>
+                      :
+                      this.cutText(item.description)
                   }
                 </div>
                 <div className='col'>
                   <img src={item.image_url} alt='pic'/>
                 </div>
                 <div className='col'>
-                  {item.abv}
-                </div>
-                <div className='col'>
-                  {item.ibu}
-                </div>
-                <div className='col'>
-                  {item.ebc}
-                </div>
-                <div className='col'>
-                  {item.srm}
-                </div>
-                <div className='col'>
-                  {item.attenuation_level}
-                </div>
-                <div className='col'>
-                  {item.volume.value}
-                </div>
-                <div className='col'>
                   {
-                    this.cutText(item.brewers_tips)
+                    this.state.id === item.id && this.state.changeText
+                      ?
+                      <div>
+                        <input
+                          name='abv'
+                          style={{textAlign: "center"}}
+                          type="text"
+                          value={item.abv}
+                          onChange={(e) => this.handlerInput(e, item.id)}
+                        />
+                      </div>
+                      :
+                      item.abv
                   }
                 </div>
                 <div className='col'>
                   {
-                    this.cutText(item.contributed_by)
+                    this.state.id === item.id && this.state.changeText
+                      ?
+                      <div>
+                        <input
+                          name='ibu'
+                          style={{textAlign: "center"}}
+                          type="text"
+                          value={item.ibu}
+                          onChange={(e) => this.handlerInput(e, item.id)}
+                        />
+                      </div>
+                      :
+                      item.ibu
+                  }
+                </div>
+                <div className='col'>
+                  {
+                    this.state.id === item.id && this.state.changeText
+                      ?
+                      <div>
+                        <input
+                          name='ebc'
+                          style={{textAlign: "center"}}
+                          type="text"
+                          value={item.ebc}
+                          onChange={(e) => this.handlerInput(e, item.id)}
+                        />
+                      </div>
+                      :
+                      item.ebc
+                  }
+                </div>
+                <div className='col'>
+                  {
+                    this.state.id === item.id && this.state.changeText
+                      ?
+                      <div>
+                        <input
+                          name='srm'
+                          style={{textAlign: "center"}}
+                          type="text"
+                          value={item.srm}
+                          onChange={(e) => this.handlerInput(e, item.id)}
+                        />
+                      </div>
+                      :
+                      item.srm
+                  }
+                </div>
+                <div className='col'>
+                  {
+                    this.state.id === item.id && this.state.changeText
+                      ?
+                      <div>
+                        <input
+                          name='attenuation_level'
+                          style={{textAlign: "center"}}
+                          type="text"
+                          value={item.attenuation_level}
+                          onChange={(e) => this.handlerInput(e, item.id)}
+                        />
+                      </div>
+                      :
+                      item.attenuation_level
+                  }
+                </div>
+                <div className='col'>
+                  {
+                    this.state.id === item.id && this.state.changeText
+                      ?
+                      <div>
+                        <input
+                          name='volume'
+                          style={{textAlign: "center"}}
+                          type="text"
+                          value={item.volume.value}
+                          onChange={(e) => this.handlerInput(e, item.id)}
+                        />
+                      </div>
+                      :
+                      item.volume.value
+                  }
+                </div>
+                <div className='col'>
+                  {
+                    this.state.id === item.id && this.state.changeText
+                      ?
+                      <div>
+                        <input
+                          name='brewers_tips'
+                          style={{textAlign: "center"}}
+                          type="text"
+                          value={item.brewers_tips}
+                          onChange={(e) => this.handlerInput(e, item.id)}
+                        />
+                      </div>
+                      :
+                      this.cutText(item.brewers_tips)
+                  }
+                </div>
+                <div className='col'>
+                  {
+                    this.state.id === item.id && this.state.changeText
+                      ?
+                      <div>
+                        <input
+                          name='contributed_by'
+                          style={{textAlign: "center"}}
+                          type="text"
+                          value={item.contributed_by}
+                          onChange={(e) => this.handlerInput(e, item.id)}
+                        />
+                      </div>
+                      :
+                      this.cutText(item.contributed_by)
                   }
                 </div>
               </div>
-            ))
+            )})
             :
             <div className="loading">LOADING...</div>
         }
@@ -267,7 +431,8 @@ class Table extends Component<props, dataObj> {
 
 const mapDispatchToProps = { // наш экшн передаем его в диспатч
   axiosGet,
-  deleteData
+  deleteData,
+  changeItemAdd
 }
 
 const mapStateToProps = (state: props) => ({ //стейт редакса

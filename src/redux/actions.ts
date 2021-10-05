@@ -12,3 +12,10 @@ export const deleteData = (payload: any) => {
     payload
   }
 }
+
+export const changeItemAdd = (payload: any) => {
+  return {
+    type: GetDataTypes.CHANGE_ITEM,
+    payload
+  }
+}

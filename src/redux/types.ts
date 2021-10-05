@@ -3,6 +3,8 @@ export enum GetDataTypes {
   REQUEST_DATA = "REQUEST_DATA",
   DELETE_DATA = 'DELETE_DATA',
   DELETE_DATA_ADD = 'DELETE_DATA_ADD',
+  CHANGE_ITEM = 'CHANGE_ITEM',
+  CHANGE_ITEM_ADD = 'CHANGE_ITEM_ADD'
 }
 
 interface AxiosGetData {
@@ -21,4 +23,12 @@ interface deleteDataAdd {
   type: GetDataTypes.DELETE_DATA_ADD
 }
 
-export type GetData = AxiosGetData | RequestPosts | deleteData | deleteDataAdd
+interface changeItem {
+  type: GetDataTypes.CHANGE_ITEM
+}
+
+interface changeItemAdd {
+  type: GetDataTypes.CHANGE_ITEM_ADD
+}
+
+export type GetData = AxiosGetData | RequestPosts | deleteData | deleteDataAdd | changeItem | changeItemAdd
